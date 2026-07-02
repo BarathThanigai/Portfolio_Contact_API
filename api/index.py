@@ -1,12 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
-from dotenv import load_dotenv
 import smtplib
 import os
 from email.message import EmailMessage
-
-load_dotenv()
 
 app = FastAPI()
 
@@ -14,7 +11,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://your-portfolio-link.com"
+        "https://your-portfolio-url.vercel.app",
+        "https://your-custom-domain.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -34,21 +32,21 @@ class ContactForm(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message": "Contact API is running"}
+    return {"message": "Contact API is running on Vercel"}
 
 
 @app.post("/contact")
 def contact(form: ContactForm):
     try:
         msg = EmailMessage()
-        msg["Subject"] = f"Portfolio Contact from {form.name}"
-        msg["From"] = EMAIL_USER
+        msg["Subject"] = f"Portfolio | New Contact Message from {form.name}"
+        msg["From"] = f"Barath Portfolio <{EMAIL_USER}>"
         msg["To"] = TO_EMAIL
         msg["Reply-To"] = form.email
 
         msg.set_content(
             f"""
-New portfolio message:
+New Portfolio Contact
 
 Name: {form.name}
 Email: {form.email}
