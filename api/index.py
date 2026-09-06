@@ -4,13 +4,16 @@ from pydantic import BaseModel, EmailStr
 import smtplib
 import os
 from email.message import EmailMessage
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
+        "http://localhost:3000",
         "https://barath-portfolio-psi.vercel.app",
     ],
     allow_credentials=True,
@@ -62,5 +65,5 @@ Message:
         return {"success": True, "message": "Email sent successfully"}
 
     except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500, detail="Failed to send email")
+        print("EMAIL ERROR:", repr(e))
+        raise HTTPException(status_code=500, detail=str(e))
